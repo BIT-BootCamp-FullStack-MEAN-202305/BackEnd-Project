@@ -138,22 +138,30 @@ const create2Product = async ( req = request, res = response ) => {
     const inputData = req.body;
 
     console.log(req.body);
+    
+    if( req.file ) {
+        console.log( `${ URL }/uploads/${ req.file.filename }` );
+    }
+    else {
+        console.log( 'No hay imagen' );
+    }
+    
 
     const newProduct = {
         name: inputData.name,
         price: Number( inputData.price ),
-        description: inputData.description,
-        category: inputData.category,
         quantity: Number( inputData.quantity ),
         userId,
-        urlImage: `${ URL }/uploads/${ req.file.filename }`
     };
 
-    // const newProduct = {
-    //     ...inputData,
-    //     userId,
-    //     urlImage: `${ URL }/uploads/${ req.file.filename }`
-    // }
+    // Valida si los valores de entrada: categoria, url de la imagen y descripcion vienen incluidos en los valores de entrada del formulario
+    if( inputData.category )
+        newProduct.category = inputData.category;
+    if( req.file ) 
+        newProduct.urlImage = `${ URL }/uploads/${ req.file.filename }`;
+    if( inputData.description )
+        newProduct.description = inputData.description;
+
 
     try {
         const data = await insert2Product( newProduct );
